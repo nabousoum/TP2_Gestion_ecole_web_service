@@ -1,0 +1,16 @@
+type Classe {
+    id: ID!
+    name: String!
+    description: String
+}
+
+type Query {
+    getAllClasses: [Classe]
+    getClasseById(id: ID!): Classe
+}
+
+type Mutation {
+    saveClasse(name: String!, description: String): Classe
+    updateClasse(id: ID!, name: String!, description: String): Classe
+    deleteClasse(id: ID!): Boolean
+}
