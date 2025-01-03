@@ -1,0 +1,93 @@
+/* Conteneur principal */
+mat-card {
+    max-width: 600px;
+    margin: 24px auto;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #ffffff;
+  }
+  
+  /* Titre */
+  .custom-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-align: center;
+    color: #3f51b5;
+    margin-bottom: 16px;
+  }
+  
+  /* Champs personnalisés */
+  .custom-form-field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+  }
+  
+  .custom-form-field label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #3f51b5;
+    margin-bottom: 4px;
+  }
+  
+  .custom-form-field input {
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .custom-form-field input:focus {
+    outline: none;
+    border-color: #3f51b5;
+  }
+  
+  /* Messages d'erreur */
+  .error {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  
+  /* Boutons */
+  .custom-button {
+    background-color: #3f51b5;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .custom-button:hover {
+    background-color: #303f9f;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+  }
+  
+  /* Style global pour le conteneur du popup */
+mat-dialog-container {
+    width: 100%;
+    max-width: none; /* Supprime la limite par défaut */
+    padding: 0; /* Supprime les marges internes */
+  }
+  
+  /* Style principal pour la carte */
+  mat-card {
+    width: 100%; /* La carte prend toute la largeur */
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #ffffff;
+    margin: 0; /* Supprime les marges externes */
+  }
+  

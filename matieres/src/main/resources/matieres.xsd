@@ -1,9 +1,9 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://example.com/matieres"
            targetNamespace="http://example.com/matieres"
-           xmlns="http://example.com/matieres"
            elementFormDefault="qualified">
 
-    <!-- Requête pour obtenir une Matière -->
+    <!-- Définition de l'élément getMatiereRequest -->
     <xs:element name="getMatiereRequest">
         <xs:complexType>
             <xs:sequence>
@@ -12,22 +12,21 @@
         </xs:complexType>
     </xs:element>
 
-    <!-- Réponse pour obtenir une Matière -->
+    <!-- Définition de l'élément getMatiereResponse -->
     <xs:element name="getMatiereResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="matiere" type="matiere"/>
+                <xs:element name="matiere" type="tns:Matiere"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <!-- Définition de l'objet Matière -->
-    <xs:complexType name="matiere">
+    <!-- Définition de la complexType Matiere -->
+    <xs:complexType name="Matiere">
         <xs:sequence>
             <xs:element name="id" type="xs:long"/>
-            <xs:element name="name" type="xs:string"/>
+            <xs:element name="nom" type="xs:string"/>
             <xs:element name="coefficient" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
-
 </xs:schema>
