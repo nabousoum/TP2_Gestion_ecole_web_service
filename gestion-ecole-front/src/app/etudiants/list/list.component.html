@@ -8,12 +8,14 @@
     </div>
   </mat-card-title>
 
-  <table mat-table [dataSource]="etudiants" class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!-- ID Column -->
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> ID </th>
       <td mat-cell *matCellDef="let etudiant"> {{ etudiant.id }} </td>
     </ng-container>
 
+    <!-- Name Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef> Nom </th>
       <td mat-cell *matCellDef="let etudiant">
@@ -21,11 +23,13 @@
       </td>
     </ng-container>
 
+    <!-- Email Column -->
     <ng-container matColumnDef="email">
       <th mat-header-cell *matHeaderCellDef> Email </th>
       <td mat-cell *matCellDef="let etudiant"> {{ etudiant.email }} </td>
     </ng-container>
 
+    <!-- Actions Column -->
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Actions </th>
       <td mat-cell *matCellDef="let etudiant">
@@ -38,7 +42,8 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="['id', 'name', 'email', 'actions']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['id', 'name', 'email', 'actions'];"></tr>
+    <!-- Table Headers and Rows -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </mat-card>

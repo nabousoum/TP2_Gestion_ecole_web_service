@@ -1,0 +1,28 @@
+<mat-sidenav-container>
+    <mat-sidenav mode="side" opened>
+      <mat-nav-list>
+        <a mat-list-item routerLink="/etudiants" routerLinkActive="active">
+          <mat-icon>school</mat-icon> Étudiants
+        </a>
+        <a mat-list-item routerLink="/classes" routerLinkActive="active">
+          <mat-icon>class</mat-icon> Classes
+        </a>
+        <a mat-list-item routerLink="/matieres" routerLinkActive="active">
+          <mat-icon>book</mat-icon> Matières
+        </a>
+        <a mat-list-item routerLink="/professeurs" routerLinkActive="active">
+          <mat-icon>people</mat-icon> Professeurs
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+  
+    <mat-sidenav-content>
+      <mat-toolbar color="primary">
+        <span>Gestion École</span>
+      </mat-toolbar>
+      <div class="content">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  

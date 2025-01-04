@@ -1,76 +1,72 @@
 import { Component, OnInit } from '@angular/core';
-import { MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { EtudiantService } from '../../services/etudiant.service';
+import { Etudiant } from '../../models/etudiant.model';
 import { FormEtudiantComponent } from '../form-etudiant/form-etudiant.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
-import { EtudiantService } from '../../services/etudiant.service';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-list',
   standalone: true,
-  imports: [MatTableModule, MatButtonModule, MatCardModule, MatDialogModule, MatIconModule],
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css'],
+  imports: [
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule,
+    MatDialogModule, // Importez les modules nécessaires pour Angular Material
+  ],
 })
 export class ListComponent implements OnInit {
-  etudiants: any[] = []; // Liste initialement vide
+  dataSource = new MatTableDataSource<Etudiant>(); // Utilisation de MatTableDataSource
+  displayedColumns: string[] = ['id', 'name', 'email', 'actions']; // Colonnes à afficher
 
-  constructor(private dialog: MatDialog, private etudiantService: EtudiantService) {}
+  constructor(
+    private dialog: MatDialog,
+    private etudiantService: EtudiantService
+  ) {}
 
   ngOnInit(): void {
-    this.fetchEtudiants(); // Récupérer les données depuis le back-end au démarrage
-  }
-
-  // Récupère la liste des étudiants depuis le back-end
-  fetchEtudiants() {
-    this.etudiantService.getEtudiants().subscribe({
-      next: (data) => {
-        this.etudiants = data;
-      },
-      error: (err) => {
-        console.error('Erreur lors de la récupération des étudiants :', err);
-      },
+    // Abonnement pour charger les données
+    this.etudiantService.etudiants$.subscribe((etudiants) => {
+      this.dataSource.data = etudiants;
     });
+
+    this.etudiantService.loadEtudiants(); // Charger les données initiales
   }
 
-  // Ouvre le popup pour ajouter un étudiant
   openAddDialog() {
     const dialogRef = this.dialog.open(FormEtudiantComponent, {
       width: '600px',
-      data: { action: 'Ajouter' }, // Action pour ajouter
+      data: { action: 'Ajouter' },
     });
-  
+
     dialogRef.afterClosed().subscribe((newEtudiant) => {
       if (newEtudiant) {
-        // Ajouter immédiatement l'étudiant à la liste locale sans recharger tout
-        this.etudiants.push(newEtudiant);
-  
-        // Alternativement, si vous voulez recharger toute la liste depuis le backend :
-        // this.fetchEtudiants();
+        this.etudiantService.addEtudiant(newEtudiant).subscribe();
       }
     });
   }
-  
 
-  // Ouvre le popup pour modifier un étudiant
-  openEditDialog(etudiant: any) {
+  openEditDialog(etudiant: Etudiant) {
     const dialogRef = this.dialog.open(FormEtudiantComponent, {
       width: '600px',
-      data: { action: 'Modifier', etudiant }, // Action pour modifier
+      data: { action: 'Modifier', etudiant },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.fetchEtudiants(); // Rafraîchir la liste après modification
+    dialogRef.afterClosed().subscribe((updatedEtudiant) => {
+      if (updatedEtudiant) {
+        this.etudiantService.updateEtudiant(etudiant.id, updatedEtudiant).subscribe();
       }
     });
   }
 
-  // Ouvre un popup de confirmation pour supprimer un étudiant
-  openDeleteDialog(etudiant: any) {
+  openDeleteDialog(etudiant: Etudiant) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
       data: { message: `Voulez-vous vraiment supprimer ${etudiant.firstName} ${etudiant.lastName} ?` },
@@ -78,14 +74,7 @@ export class ListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.etudiantService.deleteEtudiant(etudiant.id).subscribe({
-          next: () => {
-            this.etudiants = this.etudiants.filter((e) => e.id !== etudiant.id); // Supprime l'étudiant localement
-          },
-          error: (err) => {
-            console.error('Erreur lors de la suppression de l\'étudiant :', err);
-          },
-        });
+        this.etudiantService.deleteEtudiant(etudiant.id).subscribe();
       }
     });
   }

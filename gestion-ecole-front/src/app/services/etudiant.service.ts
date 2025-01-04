@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Etudiant } from '../models/etudiant.model';
 
 @Injectable({
   providedIn: 'root',
@@ -8,21 +10,51 @@ import { Observable } from 'rxjs';
 export class EtudiantService {
   private apiUrl = 'http://localhost:8080/api/etudiants';
 
+  private etudiantsSubject = new BehaviorSubject<Etudiant[]>([]);
+  etudiants$ = this.etudiantsSubject.asObservable();
+
   constructor(private http: HttpClient) {}
 
-  getEtudiants(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+  // Charger les étudiants
+  loadEtudiants(): void {
+    this.http.get<Etudiant[]>(this.apiUrl).subscribe((etudiants) => {
+      this.etudiantsSubject.next(etudiants);
+    });
   }
 
-  addEtudiant(etudiant: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, etudiant);
+  // Ajouter un étudiant
+  addEtudiant(etudiant: Etudiant): Observable<Etudiant> {
+    return this.http.post<Etudiant>(this.apiUrl, etudiant).pipe(
+      tap((newEtudiant) => {
+        const currentEtudiants = this.etudiantsSubject.value;
+        this.etudiantsSubject.next([...currentEtudiants, newEtudiant]);
+      })
+    );
   }
 
-  updateEtudiant(id: number, etudiant: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, etudiant);
+  // Modifier un étudiant
+  updateEtudiant(id: number, etudiant: Etudiant): Observable<Etudiant> {
+    return this.http.put<Etudiant>(`${this.apiUrl}/${id}`, etudiant).pipe(
+      tap((updatedEtudiant) => {
+        const currentEtudiants = this.etudiantsSubject.value;
+        const index = currentEtudiants.findIndex((e) => e.id === id);
+        if (index > -1) {
+          currentEtudiants[index] = updatedEtudiant;
+          this.etudiantsSubject.next([...currentEtudiants]);
+        }
+      })
+    );
   }
 
+  // Supprimer un étudiant
   deleteEtudiant(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+      tap(() => {
+        const currentEtudiants = this.etudiantsSubject.value;
+        this.etudiantsSubject.next(
+          currentEtudiants.filter((e) => e.id !== id)
+        );
+      })
+    );
   }
 }

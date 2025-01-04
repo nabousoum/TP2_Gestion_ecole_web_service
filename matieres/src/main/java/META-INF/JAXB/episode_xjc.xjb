@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bindings version="3.0" xmlns="https://jakarta.ee/xml/ns/jaxb">
+  <bindings schemaLocation="schema.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="com.spring.training.model"/>
+    </schemaBindings>
+    <bindings node="xs:element[@name='getMatieresRequest']">
+      <class name="GetMatieresRequest"/>
+    </bindings>
+    <bindings node="xs:element[@name='getMatieresResponse']">
+      <class name="GetMatieresResponse"/>
+    </bindings>
+    <bindings node="xs:element[@name='Matiere']">
+      <class name="Matiere"/>
+    </bindings>
+    <bindings node="xs:element[@name='getMatiereRequest']">
+      <class name="GetMatiereRequest"/>
+    </bindings>
+    <bindings node="xs:element[@name='getMatiereResponse']">
+      <class name="GetMatiereResponse"/>
+    </bindings>
+    <bindings node="xs:element[@name='createMatiereRequest']">
+      <class name="CreateMatiereRequest"/>
+    </bindings>
+    <bindings node="xs:element[@name='createMatiereResponse']">
+      <class name="CreateMatiereResponse"/>
+    </bindings>
+    <bindings node="xs:element[@name='updateMatiereRequest']">
+      <class name="UpdateMatiereRequest"/>
+    </bindings>
+    <bindings node="xs:element[@name='updateMatiereResponse']">
+      <class name="UpdateMatiereResponse"/>
+    </bindings>
+    <bindings node="xs:element[@name='deleteMatiereRequest']">
+      <class name="DeleteMatiereRequest"/>
+    </bindings>
+    <bindings node="xs:element[@name='deleteMatiereResponse']">
+      <class name="DeleteMatiereResponse"/>
+    </bindings>
+  </bindings>
+</bindings>
