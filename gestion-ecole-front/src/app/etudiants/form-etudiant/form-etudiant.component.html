@@ -1,47 +1,71 @@
 <mat-card>
-    <mat-card-title class="custom-title">Ajouter un Étudiant</mat-card-title>
-    <mat-card-content>
-      <form [formGroup]="etudiantForm" (ngSubmit)="onSubmit()">
-        <!-- Champ Prénom -->
-        <div class="custom-form-field">
-          <label for="firstName">Prénom</label>
-          <input id="firstName" type="text" formControlName="firstName" placeholder="Entrez le prénom" />
-          <div class="error" *ngIf="etudiantForm.get('firstName')?.hasError('required')">
-            Le prénom est requis.
-          </div>
+  <!-- Titre dynamique basé sur l'action -->
+  <mat-card-title class="custom-title">
+    {{ data?.action === 'Modifier' ? 'Modifier un Étudiant' : 'Ajouter un Étudiant' }}
+  </mat-card-title>
+
+  <mat-card-content>
+    <form [formGroup]="etudiantForm" (ngSubmit)="onSubmit()">
+      <!-- Champ Prénom -->
+      <div class="custom-form-field">
+        <label for="firstName">Prénom</label>
+        <input 
+          id="firstName" 
+          type="text" 
+          formControlName="firstName" 
+          placeholder="Entrez le prénom" 
+        />
+        <div class="error" *ngIf="etudiantForm.get('firstName')?.hasError('required')">
+          Le prénom est requis.
         </div>
-  
-        <!-- Champ Nom -->
-        <div class="custom-form-field">
-          <label for="lastName">Nom</label>
-          <input id="lastName" type="text" formControlName="lastName" placeholder="Entrez le nom" />
-          <div class="error" *ngIf="etudiantForm.get('lastName')?.hasError('required')">
-            Le nom est requis.
-          </div>
+      </div>
+
+      <!-- Champ Nom -->
+      <div class="custom-form-field">
+        <label for="lastName">Nom</label>
+        <input 
+          id="lastName" 
+          type="text" 
+          formControlName="lastName" 
+          placeholder="Entrez le nom" 
+        />
+        <div class="error" *ngIf="etudiantForm.get('lastName')?.hasError('required')">
+          Le nom est requis.
         </div>
-  
-        <!-- Champ Email -->
-        <div class="custom-form-field">
-          <label for="email">Email</label>
-          <input id="email" type="email" formControlName="email" placeholder="Entrez l'email" />
-          <div class="error" *ngIf="etudiantForm.get('email')?.hasError('required')">
-            L'email est requis.
-          </div>
-          <div class="error" *ngIf="etudiantForm.get('email')?.hasError('email')">
-            Format d'email invalide.
-          </div>
+      </div>
+
+      <!-- Champ Email -->
+      <div class="custom-form-field">
+        <label for="email">Email</label>
+        <input 
+          id="email" 
+          type="email" 
+          formControlName="email" 
+          placeholder="Entrez l'email" 
+        />
+        <div class="error" *ngIf="etudiantForm.get('email')?.hasError('required')">
+          L'email est requis.
         </div>
-  
-        <!-- Boutons -->
-        <div class="actions">
-          <button type="submit" class="custom-button" [disabled]="etudiantForm.invalid">
-            Enregistrer
-          </button>
-          <button type="button" class="custom-button" (click)="closeDialog()">
-            Annuler
-          </button>
+        <div class="error" *ngIf="etudiantForm.get('email')?.hasError('email')">
+          Format d'email invalide.
         </div>
-      </form>
-    </mat-card-content>
-  </mat-card>
-  
+      </div>
+
+      <!-- Boutons -->
+      <div class="actions">
+        <button 
+          type="submit" 
+          class="custom-button" 
+          [disabled]="etudiantForm.invalid">
+          {{ data?.action === 'Modifier' ? 'Enregistrer les Modifications' : 'Ajouter' }}
+        </button>
+        <button 
+          type="button" 
+          class="custom-button" 
+          (click)="closeDialog()">
+          Annuler
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

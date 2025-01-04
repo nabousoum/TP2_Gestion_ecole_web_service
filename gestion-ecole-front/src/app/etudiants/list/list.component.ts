@@ -6,6 +6,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { FormEtudiantComponent } from '../form-etudiant/form-etudiant.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { EtudiantService } from '../../services/etudiant.service';
 
 @Component({
   selector: 'app-list',
@@ -15,57 +16,77 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
   styleUrls: ['./list.component.css'],
 })
 export class ListComponent implements OnInit {
-  etudiants = [
-    { id: 1, firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com' },
-    { id: 2, firstName: 'Jane', lastName: 'Smith', email: 'jane.smith@example.com' },
-    { id: 3, firstName: 'Alice', lastName: 'Johnson', email: 'alice.johnson@example.com' },
-  ];
+  etudiants: any[] = []; // Liste initialement vide
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog, private etudiantService: EtudiantService) {}
+
+  ngOnInit(): void {
+    this.fetchEtudiants(); // Récupérer les données depuis le back-end au démarrage
+  }
+
+  // Récupère la liste des étudiants depuis le back-end
+  fetchEtudiants() {
+    this.etudiantService.getEtudiants().subscribe({
+      next: (data) => {
+        this.etudiants = data;
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des étudiants :', err);
+      },
+    });
+  }
 
   // Ouvre le popup pour ajouter un étudiant
   openAddDialog() {
     const dialogRef = this.dialog.open(FormEtudiantComponent, {
       width: '600px',
-      data: { action: 'Ajouter' }, // Ajouter une action
+      data: { action: 'Ajouter' }, // Action pour ajouter
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.etudiants.push(result); // Ajouter un nouvel étudiant
+  
+    dialogRef.afterClosed().subscribe((newEtudiant) => {
+      if (newEtudiant) {
+        // Ajouter immédiatement l'étudiant à la liste locale sans recharger tout
+        this.etudiants.push(newEtudiant);
+  
+        // Alternativement, si vous voulez recharger toute la liste depuis le backend :
+        // this.fetchEtudiants();
       }
     });
   }
+  
 
   // Ouvre le popup pour modifier un étudiant
   openEditDialog(etudiant: any) {
     const dialogRef = this.dialog.open(FormEtudiantComponent, {
       width: '600px',
-      data: { action: 'Modifier', etudiant }, // Ajouter une action et les données
+      data: { action: 'Modifier', etudiant }, // Action pour modifier
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        const index = this.etudiants.findIndex(e => e.id === result.id);
-        if (index !== -1) {
-          this.etudiants[index] = result; // Mettre à jour les informations de l'étudiant
-        }
+        this.fetchEtudiants(); // Rafraîchir la liste après modification
       }
     });
   }
 
+  // Ouvre un popup de confirmation pour supprimer un étudiant
   openDeleteDialog(etudiant: any) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '400px',
       data: { message: `Voulez-vous vraiment supprimer ${etudiant.firstName} ${etudiant.lastName} ?` },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.etudiants = this.etudiants.filter(e => e.id !== etudiant.id); // Supprime l'étudiant
+        this.etudiantService.deleteEtudiant(etudiant.id).subscribe({
+          next: () => {
+            this.etudiants = this.etudiants.filter((e) => e.id !== etudiant.id); // Supprime l'étudiant localement
+          },
+          error: (err) => {
+            console.error('Erreur lors de la suppression de l\'étudiant :', err);
+          },
+        });
       }
     });
   }
-
-  ngOnInit(): void {}
 }

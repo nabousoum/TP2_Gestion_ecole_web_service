@@ -1,19 +1,19 @@
 <mat-sidenav-container>
   <mat-sidenav mode="side" opened>
     <mat-nav-list>
-      <a mat-list-item routerLink="/etudiants">
+      <a mat-list-item (click)="navigateTo('/etudiants')">
         <mat-icon>school</mat-icon>
         Étudiants
       </a>
-      <a mat-list-item routerLink="/classes">
+      <a mat-list-item (click)="navigateTo('/classes')">
         <mat-icon>class</mat-icon>
         Classes
       </a>
-      <a mat-list-item routerLink="/matieres">
+      <a mat-list-item (click)="navigateTo('/matieres')">
         <mat-icon>book</mat-icon>
         Matières
       </a>
-      <a mat-list-item routerLink="/professeurs">
+      <a mat-list-item (click)="navigateTo('/professeurs')">
         <mat-icon>people</mat-icon>
         Professeurs
       </a>
